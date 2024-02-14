@@ -1,0 +1,218 @@
+<?xml version="1.0" encoding="utf-8"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.4.xsd">
+
+    <changeSet id="initial_schema-1" author="boligon" context="test OR dev">
+
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="PESSOA" />
+            </not>
+        </preConditions>
+
+        <comment>Criacao da tabela de Pessoa</comment>
+
+        <createTable tableName="PESSOA">
+            <column name="ID" type="${number_10}" defaultValue="0">
+                <constraints nullable="false" />
+            </column>
+            <column name="NOME" type="varchar(200)" />
+            <column name="CNPJCPF" type="varchar(15)" />
+            <column name="TIPOPESSOA" type="char(1)" />
+
+        </createTable>
+
+        <addPrimaryKey tableName="PESSOA" columnNames="ID"
+                       constraintName="XPKPESSOA" />
+        <createSequence sequenceName="seq_pessoa_id"/>
+
+    </changeSet>
+
+    <changeSet id="initial_schema-2" author="boligon" context="test OR dev">
+
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="DEBITO" />
+            </not>
+        </preConditions>
+
+        <comment>Criacao da tabela de Débito</comment>
+
+        <createTable tableName="DEBITO">
+            <column name="ID" type="${number_10}" defaultValue="0">
+                <constraints nullable="false" />
+            </column>
+            <column name="PESSOA" type="${number_10}" defaultValue="0">
+                <constraints nullable="false" />
+            </column>
+            <column name="DATALANCAMENTO" type="timestamp" />
+        </createTable>
+
+        <addPrimaryKey tableName="DEBITO" columnNames="ID"
+                       constraintName="XPKDEBITO" />
+
+        <addForeignKeyConstraint baseColumnNames="PESSOA"
+                                 baseTableName="DEBITO" constraintName="FKPESSOA_DEBITO"
+                                 referencedTableName="PESSOA" referencedColumnNames="ID" />
+
+        <createSequence sequenceName="seq_debito_id"/>
+    </changeSet>
+
+    <changeSet id="initial_schema-3" author="boligon" context="test OR dev">
+
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="DEBITOPARCELA" />
+            </not>
+        </preConditions>
+
+        <comment>Criacao da tabela de parcelas dos débitos</comment>
+
+        <createTable tableName="DEBITOPARCELA">
+            <column name="ID" type="${number_10}" defaultValue="0">
+                <constraints nullable="false" />
+            </column>
+            <column name="DEBITO" type="${number_10}" defaultValue="0">
+                <constraints nullable="false" />
+            </column>
+            <column name="NUMEROPARCELA" type="${number_10}" />
+            <column name="DATAVENCIMENTO" type="timestamp" />
+            <column name="SITUACAOPARCELA" type="char(1)" />
+            <column name="VALORPARCELA" type="${number_15_2}" />
+        </createTable>
+
+        <addPrimaryKey tableName="DEBITOPARCELA" columnNames="ID"
+                       constraintName="XPKDEBITOPARCELA" />
+
+        <addForeignKeyConstraint baseColumnNames="DEBITO"
+                                 baseTableName="DEBITOPARCELA" constraintName="FKDEBITOPARCELA_DEBITO"
+                                 referencedTableName="DEBITO" referencedColumnNames="ID" />
+
+        <createSequence sequenceName="seq_debitoparcela_id"/>
+    </changeSet>
+
+    <changeSet id="initial_schema-4" author="boligon" context="test OR dev">
+
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="CANCELAMENTO" />
+            </not>
+        </preConditions>
+
+        <comment>Criacao da tabela de cancelamentos de débitos</comment>
+
+        <createTable tableName="CANCELAMENTO">
+            <column name="ID" type="${number_10}" defaultValue="0">
+                <constraints nullable="false" />
+            </column>
+            <column name="NUMEROCANCELAMENTO" type="${number_10}" />
+            <column name="DATACANCELAMENTO" type="timestamp" />
+            <column name="MOTIVO" type="varchar(200)" />
+            <column name="VALORCANCELADO" type="${number_15_2}" />
+        </createTable>
+
+        <addPrimaryKey tableName="CANCELAMENTO" columnNames="ID"
+                       constraintName="XPKCANCELAMENTO" />
+
+        <createSequence sequenceName="seq_cancelamento_id"/>
+    </changeSet>
+
+    <changeSet id="initial_schema-5" author="boligon" context="test OR dev">
+
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="CANCELAMENTOITEM" />
+            </not>
+        </preConditions>
+
+        <comment>Criacao da tabela de itens dos cancelamentos de débitos</comment>
+
+        <createTable tableName="CANCELAMENTOITEM">
+            <column name="ID" type="${number_10}" defaultValue="0">
+                <constraints nullable="false" />
+            </column>
+            <column name="CANCELAMENTO" type="${number_10}" defaultValue="0">
+                <constraints nullable="false" />
+            </column>
+            <column name="DEBITOPARCELA" type="${number_10}" defaultValue="0">
+                <constraints nullable="false" />
+            </column>
+            <column name="VALORCANCELADO" type="${number_15_2}" />
+        </createTable>
+
+        <addPrimaryKey tableName="CANCELAMENTOITEM" columnNames="ID"
+                       constraintName="XPKCANCELAMENTOITEM" />
+
+        <addForeignKeyConstraint baseColumnNames="DEBITOPARCELA"
+                                 baseTableName="CANCELAMENTOITEM" constraintName="FKCANCELAMENTOITEM_DEBITOPARCELA"
+                                 referencedTableName="DEBITOPARCELA" referencedColumnNames="ID" />
+
+        <addForeignKeyConstraint baseColumnNames="CANCELAMENTO"
+                                 baseTableName="CANCELAMENTO" constraintName="FKCANCELAMENTOITEM_CANCELAMENTO"
+                                 referencedTableName="CANCELAMENTO" referencedColumnNames="ID" />
+
+        <createSequence sequenceName="seq_cancelamentoitem_id"/>
+    </changeSet>
+
+    <changeSet id="initial_schema-6" author="boligon" context="test OR dev">
+
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="PAGAMENTO" />
+            </not>
+        </preConditions>
+
+        <comment>Criacao da tabela de pagamentos de débitos</comment>
+
+        <createTable tableName="PAGAMENTO">
+            <column name="ID" type="${number_10}" defaultValue="0">
+                <constraints nullable="false" />
+            </column>
+            <column name="NUMEROPAGAMENTO" type="${number_10}" />
+            <column name="DATAPAGAMENTO" type="timestamp" />
+        </createTable>
+
+        <addPrimaryKey tableName="PAGAMENTO" columnNames="ID"
+                       constraintName="XPKPAGAMENTO" />
+
+        <createSequence sequenceName="seq_pagamento_id"/>
+    </changeSet>
+
+    <changeSet id="initial_schema-7" author="boligon" context="test OR dev">
+
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="PAGAMENTOITEM" />
+            </not>
+        </preConditions>
+
+        <comment>Criacao da tabela de itens de pagamentos de débitos</comment>
+
+        <createTable tableName="PAGAMENTOITEM">
+            <column name="ID" type="${number_10}" defaultValue="0">
+                <constraints nullable="false" />
+            </column>
+            <column name="PAGAMENTO" type="${number_10}" defaultValue="0">
+                <constraints nullable="false" />
+            </column>
+            <column name="DEBITOPARCELA" type="${number_10}" defaultValue="0">
+                <constraints nullable="false" />
+            </column>
+            <column name="VALORPAGO" type="${number_15_2}" />
+        </createTable>
+
+        <addPrimaryKey tableName="PAGAMENTOITEM" columnNames="ID"
+                       constraintName="XPKPAGAMENTOITEM" />
+
+        <addForeignKeyConstraint baseColumnNames="DEBITOPARCELA"
+                                 baseTableName="PAGAMENTOITEM" constraintName="FKPAGAMENTOITEM_DEBITOPARCELA"
+                                 referencedTableName="DEBITOPARCELA" referencedColumnNames="ID" />
+        <addForeignKeyConstraint baseColumnNames="PAGAMENTO"
+                                 baseTableName="PAGAMENTOITEM" constraintName="FKPAGAMENTOITEM_PAGAMENTO"
+                                 referencedTableName="PAGAMENTO" referencedColumnNames="ID" />
+
+        <createSequence sequenceName="seq_pagamentoitem_id"/>
+    </changeSet>
+
+</databaseChangeLog>

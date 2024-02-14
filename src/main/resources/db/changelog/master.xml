@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.4.xsd">
+
+    <!-- Number types -->
+    <property name="number_10" value="NUMERIC(10)" dbms="oracle, postgresql, h2"/>
+    <property name="number_15_2" value="NUMERIC(15, 2)" dbms="oracle, postgresql, h2"/>
+
+    <!-- Date/Time types -->
+    <property name="date" value="date" dbms="oracle, postgresql, h2"/>
+
+    <!-- Varchar types -->
+    <property name="varchar_15" value="VARCHAR2(15)" dbms="oracle"/>
+    <property name="varchar_15" value="CHARACTER VARYING(15)" dbms="postgresql"/>
+    <property name="varchar_15" value="VARCHAR(15)" dbms="h2"/>
+
+    <property name="varchar_100" value="VARCHAR2(100)" dbms="oracle"/>
+    <property name="varchar_100" value="CHARACTER VARYING(100)" dbms="postgresql"/>
+    <property name="varchar_100" value="VARCHAR(100)" dbms="h2"/>
+
+    <property name="varchar_200" value="VARCHAR2(200)" dbms="oracle"/>
+    <property name="varchar_200" value="CHARACTER VARYING(200)" dbms="postgresql"/>
+    <property name="varchar_200" value="VARCHAR(200)" dbms="h2"/>
+
+    <!-- schemas -->
+    <include file="initial_schema.xml" relativeToChangelogFile="true"/>
+
+</databaseChangeLog>
